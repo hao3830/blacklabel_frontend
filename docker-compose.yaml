@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  black_label:
+    build: .
+    restart: always
+    container_name: black_label
+    ports:
+      - "8087:3000"
