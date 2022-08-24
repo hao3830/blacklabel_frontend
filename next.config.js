@@ -5,7 +5,7 @@ const nextConfig = {
   swcMinify: true,
   output: 'standalone',
   images: {
-    domains: ['http://127.0.0.1:3030'],
+    domains: ['https://aiclub.uit.edu.vn/blacklabel/api'],
   },
 }
 
