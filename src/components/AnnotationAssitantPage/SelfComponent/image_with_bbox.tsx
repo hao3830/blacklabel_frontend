@@ -5,11 +5,16 @@ import { Image as Img, Layer, Stage } from 'react-konva'
 import { KonvaEventObject } from 'konva/lib/Node'
 import BBox from './bbox'
 import { listColor } from '../../../models/annotation_assistant/list_color'
-import { getLabels, updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
+import {
+  getLabels,
+  updateAnnotate,
+} from '../../../APIS/annotation_assistant/annotate'
+import { toast } from 'react-toastify'
+import { Toast } from 'react-toastify/dist/components'
 const ImageWithBBox = ({
   setSelectedId,
   selectedId,
-  imgaeIdx,
+  imageIdx,
   dsId,
   Labels,
   setLabels,
@@ -17,17 +22,19 @@ const ImageWithBBox = ({
   listColor,
   currClassIdx,
   setCurrClassIdx,
+  typeEditor,
 }: {
   selectedId: number
   setSelectedId: (key: number) => void
   listColor: listColor
   currClassIdx: number
   setCurrClassIdx: (key: number) => void
-  imgaeIdx: number
+  imageIdx: number
   dsId: string
   Labels: Labels
   setLabels: (key: Labels) => void
   parentRef: RefObject<HTMLElement>
+  typeEditor: number | void
 }) => {
   const [isDrawing, setIsDrawing] = useState<boolean>(false)
   const [stageWidth, setStageWidth] = useState<number>(0)
@@ -36,40 +43,33 @@ const ImageWithBBox = ({
   const [newAnnotation, setNewAnnotation] = useState<any>([])
 
   const updateBboxHandler = async () => {
-    if (!currClassIdx) return
     let bbox: Bboxes[] = []
     let b: Bboxes
     let currLabel = Labels
-    for (b of currLabel.labels[imgaeIdx]) {
-
-      // let curr = {
-      //   x1
-      // }
-
-      const imgW = Labels.image_size[imgaeIdx][0]
-      const imgH = Labels.image_size[imgaeIdx][1]
-
+    for (b of currLabel.labels[imageIdx]) {
+      const imgW = Labels.image_size[imageIdx][0]
+      const imgH = Labels.image_size[imageIdx][1]
 
       let curr = {
-        x1: (b.x1* stageWidth) /  imgW,
-        y1: (b.y1* stageHeight) /  imgH,
-        x2: (b.x2* stageWidth) /  imgW,
-        y2: (b.y2* stageHeight) /  imgH,
-        class_name:b.class_name
+        x1: (b.x1 * stageWidth) / imgW,
+        y1: (b.y1 * stageHeight) / imgH,
+        x2: (b.x2 * stageWidth) / imgW,
+        y2: (b.y2 * stageHeight) / imgH,
+        class_name: b.class_name,
       }
-      
+
       bbox.push(curr)
     }
-    
+
     const uploadResult = await updateAnnotate({
       ds_id: dsId,
-      image_name: Labels.images[imgaeIdx],
+      image_name: Labels.images[imageIdx],
       bbox: bbox,
       class_name: 'None',
     })
-    console.log(uploadResult)
-    if(uploadResult) {
-    const result = await getLabels({ ds_id:dsId })
+    if (uploadResult) {
+      const result = await getLabels({ ds_id: dsId })
+      console.log(result)
       result && setLabels(result)
     }
   }
@@ -79,11 +79,11 @@ const ImageWithBBox = ({
       e.key == 'Delete' &&
       selectedId != -1 &&
       Labels &&
-      Labels.labels[imgaeIdx] &&
-      Labels.labels[imgaeIdx].length > selectedId
+      Labels.labels[imageIdx] &&
+      Labels.labels[imageIdx].length > selectedId
     ) {
       let curr = Labels
-      curr.labels[imgaeIdx].splice(selectedId, 1)
+      curr.labels[imageIdx].splice(selectedId, 1)
       setLabels(curr)
       setSelectedId(-1)
     }
@@ -107,20 +107,21 @@ const ImageWithBBox = ({
     setSelectedId(-1)
     let image = new Image()
     image.src = `${API_URL}/label_tool/dataset_img?ds_id=${dsId}&img_id=${
-      Labels.images[imgaeIdx]
+      Labels.images[imageIdx]
     }&img_size=${500}`
     setImage(image)
 
     return () => {
+      // toast.info('Updatin/g')
       updateBboxHandler()
     }
-  }, [imgaeIdx])
+  }, [imageIdx])
 
   const handleMouseDown = (event: KonvaEventObject<MouseEvent>) => {
-    if (newAnnotation.length === 0 && selectedId == -1 && currClassIdx != -1) {
+    if (newAnnotation.length === 0 && currClassIdx != -1 && typeEditor == 1) {
       let { x, y } = event.target.getStage()!.getPointerPosition()!
-      const imgW = Labels.image_size[imgaeIdx][0]
-      const imgH = Labels.image_size[imgaeIdx][1]
+      const imgW = Labels.image_size[imageIdx][0]
+      const imgH = Labels.image_size[imageIdx][1]
       x = (x * imgW) / stageWidth
       y = (y * imgH) / stageHeight
       let curr = Labels
@@ -132,7 +133,7 @@ const ImageWithBBox = ({
         class_name: currClassIdx ? listColor[currClassIdx].className : 'None',
       }
 
-      curr.labels[imgaeIdx].push(currBbox)
+      curr.labels[imageIdx].push(currBbox)
       setLabels(curr)
       setIsDrawing(true)
       setNewAnnotation([
@@ -153,8 +154,8 @@ const ImageWithBBox = ({
       const sy = newAnnotation[0].y1
 
       let { x, y } = event.target.getStage()!.getPointerPosition()!
-      const imgW = Labels.image_size[imgaeIdx][0]
-      const imgH = Labels.image_size[imgaeIdx][1]
+      const imgW = Labels.image_size[imageIdx][0]
+      const imgH = Labels.image_size[imageIdx][1]
       x = (x * imgW) / stageWidth
       y = (y * imgH) / stageHeight
       const annotationToAdd: Bboxes = {
@@ -168,8 +169,8 @@ const ImageWithBBox = ({
       setIsDrawing(false)
 
       let curr = Labels
-      curr.labels[imgaeIdx].splice(
-        curr.labels[imgaeIdx].length - 1,
+      curr.labels[imageIdx].splice(
+        curr.labels[imageIdx].length - 1,
         1,
         annotationToAdd
       )
@@ -183,8 +184,8 @@ const ImageWithBBox = ({
       const sy = newAnnotation[0].y1
       let { x, y } = event.target.getStage()!.getPointerPosition()!
 
-      const imgW = Labels.image_size[imgaeIdx][0]
-      const imgH = Labels.image_size[imgaeIdx][1]
+      const imgW = Labels.image_size[imageIdx][0]
+      const imgH = Labels.image_size[imageIdx][1]
 
       x = (x * imgW) / stageWidth
       y = (y * imgH) / stageHeight
@@ -197,8 +198,8 @@ const ImageWithBBox = ({
       }
 
       let curr = Labels
-      curr.labels[imgaeIdx].splice(
-        curr.labels[imgaeIdx].length - 1,
+      curr.labels[imageIdx].splice(
+        curr.labels[imageIdx].length - 1,
         1,
         annotate
       )
@@ -230,19 +231,22 @@ const ImageWithBBox = ({
       </Layer>
       <Layer>
         {Labels &&
-          Labels.labels[imgaeIdx].map((items, idx) => (
+          Labels.labels[imageIdx].map((items, idx) => (
             <BBox
               key={idx}
               idx={idx}
               items={items}
-              imgW={Labels.image_size[imgaeIdx][0]}
-              imgH={Labels.image_size[imgaeIdx][1]}
+              Labels={Labels}
+              setLabels={setLabels}
+              imageIdx={imageIdx}
               selectedId={selectedId}
               stageWidth={stageWidth}
               stageHeight={stageHeight}
               setSelectedId={setSelectedId}
               listColor={listColor}
               setCurrClassIdx={setCurrClassIdx}
+              currClassIdx={currClassIdx}
+              typeEditor={typeEditor}
             />
           ))}
       </Layer>

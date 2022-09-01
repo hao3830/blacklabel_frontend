@@ -24,6 +24,7 @@ const AnnotateDetailPage = ({
   const [selectedId, setSelectedId] = useState<number>(-1)
   const [currClassIdx, setCurrClassIdx] = useState<number>(-1)
   const [listColor, setListColor] = useState<listColor>([])
+  const [typeEditor, setTypeEditor] = useState<number | void>()
   const figureRef = useRef<HTMLElement>(null)
   const router = useRouter()
 
@@ -53,7 +54,7 @@ const AnnotateDetailPage = ({
   })
 
   useEffect(() => {
-    if (!labels || listColor) return
+    if (!labels || listColor.length) return
     let currListColor = []
     for (let i of labels.list_labels) {
       const className = i.toString()
@@ -66,7 +67,7 @@ const AnnotateDetailPage = ({
     }
 
     setListColor(currListColor)
-  }, [labels,listColor])
+  }, [labels, listColor])
 
   useEffect(() => {
     if (ds_id) getDataDetailHandler(ds_id)
@@ -137,11 +138,12 @@ const AnnotateDetailPage = ({
             >
               {labels.ds_type == 'object_detection' ? (
                 <ImageWithBBox
+                  typeEditor={typeEditor}
                   setSelectedId={setSelectedId}
                   selectedId={selectedId}
                   parentRef={figureRef}
                   dsId={ds_id}
-                  imgaeIdx={currIdx}
+                  imageIdx={currIdx}
                   Labels={labels}
                   setLabels={setLabels}
                   listColor={listColor}
@@ -161,9 +163,11 @@ const AnnotateDetailPage = ({
           )}
         </>
       </div>
-      <div className=" absolute right-0 border-base-300 border-l w-1/6 h-full flex flex-col items-center">
+      <div className=" overflow-hidden border-base-300 border-l w-1/6 h-full flex flex-col items-center">
         {labels && labels.ds_type == 'object_detection' ? (
           <SideBarForObjectDetection
+            typeEditor={typeEditor}
+            setTypeEditor={setTypeEditor}
             imgaeIdx={currIdx}
             Labels={labels}
             setLabels={setLabels}
