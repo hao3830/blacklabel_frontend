@@ -1,7 +1,7 @@
 interface DataDetail {
   list_labels: string[]
   list_images: string[]
-  type_annotate: string
+  dataset_type: string
 }
 
 interface Data {

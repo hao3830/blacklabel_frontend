@@ -44,9 +44,9 @@ const Step1 = ({
 
     if (data) {
       setCurrTask(data)
-      console.log(data)
       const intervalId = setInterval(async () => {
         const state = await getTaskState({ task_id: data.task_id })
+        console.log(state)
         if (state == 'SUCCESS') {
           toast.update(id, {
             type: 'success',
@@ -55,7 +55,7 @@ const Step1 = ({
             autoClose: 1000,
           })
           clearInterval(intervalId)
-        } else if (state == 'FAILE') {
+        } else if (state != 'PENDING') {
           toast.update(id, {
             type: 'error',
             render: 'Upload failed',
@@ -139,6 +139,7 @@ const Step1 = ({
           <option>
             Classification (Zip file are subs-folder of difference class)
           </option>
+          <option>Object Detection</option>
         </select>
 
         <button

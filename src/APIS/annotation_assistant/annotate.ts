@@ -1,7 +1,7 @@
 import IResponse from '../respone'
 import axios from '../axios_instance'
 import { toast } from 'react-toastify'
-import type { Labels } from '../../models/annotation_assistant/labels'
+import type { Bboxes, Labels } from '../../models/annotation_assistant/labels'
 
 interface ILabelResponse extends IResponse {
     results: Labels
@@ -38,18 +38,23 @@ const getLabels = async ({ ds_id }: { ds_id: string }): Promise<Labels | void> =
 
 }
 
-const updateImageClass = async ({ ds_id, image_name, class_name }: { ds_id: string, image_name: string, class_name: string }): Promise<boolean | void> => {
+type UpdateAnnotate = {
+    ds_id: string, image_name: string, class_name?: string, bbox?: Bboxes[]
+}
+
+const updateAnnotate = async ({ ds_id, image_name, class_name, bbox }: { ds_id: string, image_name: string, class_name?: string, bbox?: Bboxes[] }): Promise<boolean | void> => {
 
     try {
 
-        const respone = await axios.put<IResponse>('/label_tool/annotate', {
-        }, {
-            params: {
-                ds_id,
-                image_name,
-                class_name,
-            }
-        })
+        const formData: UpdateAnnotate = {
+            ds_id: ds_id,
+            image_name: image_name,
+            class_name: class_name,
+            bbox: bbox
+
+        }
+
+        const respone = await axios.put<IResponse>('/label_tool/annotate', JSON.stringify(formData))
 
         if (respone.status != 200) {
             toast.error("Have error when update image class, please try again")
@@ -79,4 +84,4 @@ const updateImageClass = async ({ ds_id, image_name, class_name }: { ds_id: stri
 
 }
 
-export { getLabels, updateImageClass } 
+export { getLabels, updateAnnotate } 

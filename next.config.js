@@ -3,9 +3,10 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  basePath:'/blacklabel',
   output: 'standalone',
   images: {
-    domains: ['https://aiclub.uit.edu.vn/blacklabel/api'],
+    domains: ['https://aiclub.uit.edu.vn'],
   },
 }
 

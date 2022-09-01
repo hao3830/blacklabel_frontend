@@ -1,10 +1,10 @@
 import { Item, ItemParams, Menu, useContextMenu } from 'react-contexify'
 import { useState } from 'react'
-import { API_URL } from '../../../constants/Api'
 import { Labels } from '../../../models/annotation_assistant/labels'
-import { updateImageClass } from '../../../APIS/annotation_assistant/annotate'
+import { updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
 import { getLabels } from '../../../APIS/annotation_assistant/annotate'
-import Link from 'next/link'
+import showImageForClassification from './ComponentForDiffTypeDS/showImageForClassification'
+import showImageForObjectDetection from './ComponentForDiffTypeDS/showImageForObjectDetection'
 
 const ClassificationContextMenu = ({
   labels,
@@ -25,10 +25,10 @@ const ClassificationContextMenu = ({
   const handleClick = (args: ItemParams) => {
     const imageName = args.props.imageName
     setCurrImage(imageName)
-    // handleUpdateImageClass
+    // handleupdateAnnotate
   }
 
-  const handleUpdateImageClass = async ({
+  const handleupdateAnnotate = async ({
     ds_id,
     image_name,
     class_name,
@@ -37,7 +37,7 @@ const ClassificationContextMenu = ({
     image_name: string
     class_name: string
   }) => {
-    if (await updateImageClass({ ds_id, image_name, class_name })) {
+    if (await updateAnnotate({ ds_id, image_name, class_name })) {
       const result = await getLabels({ ds_id })
 
       result && setLabels(result)
@@ -56,44 +56,34 @@ const ClassificationContextMenu = ({
 
   return (
     <div className="h-5/6 w-full relative">
-      <Menu id={contextMenuId} animation="scale">
-        <Item onClick={handleClick}>
-          <label htmlFor="my-modal-4" className=" modal-button">
-            Set Image Class
-          </label>
-        </Item>
-      </Menu>
+      {labels.ds_type != 'object_detection' && (
+        <Menu id={contextMenuId} animation="scale">
+          <Item onClick={handleClick}>
+            <label htmlFor="my-modal-4" className=" modal-button">
+              Set Image Class
+            </label>
+          </Item>
+        </Menu>
+      )}
       <div className="grid grid-cols-5 grid-rows-2 place-items-center h-full w-full  items-center  ">
         {labels.images.map((image, index) => {
           if (index < (currPage - 1) * 10 || index >= currPage * 10) return
 
-          let label = ''
-          if (index < labels.labels.length) label = labels.labels[index]
-
-          return (
-            <div
-              className="card w-5/6 h-5/6 bg-base-300 shadow-xl  relative flex flex-col text-white"
-              key={index}
-              onContextMenu={(event) =>
-                handleOnContextMenu(event, labels.images[index])
-              }
-            >
-              <Link
-                href={`/annotation_assistant/${index}/${currDataId}`}
-                shallow={true}
-              >
-                <figure className=" w-20 h-16 place-self-center mt-10 relative hover:cursor-pointer">
-                  <img
-                    src={`${API_URL}/label_tool/dataset_img?ds_id=${currDataId}&img_id=${image}`}
-                    alt={image}
-                  />
-                </figure>
-              </Link>
-              <div className="card-body items-center text-center ">
-                <h2 className="card-title">{label ? label : 'None'}</h2>
-              </div>
-            </div>
-          )
+          return labels.ds_type == 'object_detection'
+            ? showImageForObjectDetection(
+                index,
+                labels,
+                handleOnContextMenu,
+                currDataId,
+                image
+              )
+            : showImageForClassification(
+                index,
+                labels,
+                handleOnContextMenu,
+                currDataId,
+                image
+              )
         })}
       </div>
 
@@ -112,13 +102,14 @@ const ClassificationContextMenu = ({
         >
           <h1 className=" text-white text-2xl">List Class Name</h1>
           {labels &&
+            labels.list_labels &&
             labels.list_labels.map((item, idx) => {
               return (
                 <div
                   key={idx}
                   className="btn w-1/2 m-2"
                   onClick={() => {
-                    handleUpdateImageClass({
+                    handleupdateAnnotate({
                       ds_id: currDataId,
                       image_name: currImage,
                       class_name: item,

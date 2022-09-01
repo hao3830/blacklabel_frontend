@@ -7,7 +7,6 @@ const AnnotationAssitantPageSideBar = () => {
   const router = useRouter()
 
   useEffect(() => {
-    console.log(router.pathname)
     if (
       router.pathname == '/annotation_assistant/annotate' ||
       router.pathname == '/annotation_assistant/[...slug]'

@@ -1,10 +1,17 @@
+import { SideBarForObjectDetection } from '../SelfComponent/ComponentForDiffTypeDS/side_bar_for_object_detection'
+import { SideBarForClassification } from '../SelfComponent/ComponentForDiffTypeDS/side_bar_for_classification'
 import { Labels } from '../../../models/annotation_assistant/labels'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   getLabels,
-  updateImageClass,
+  updateAnnotate,
 } from '../../../APIS/annotation_assistant/annotate'
+import { useRouter } from 'next/router'
 import { API_URL } from '../../../constants/Api'
+import { listColor } from '../../../models/annotation_assistant/list_color'
+import ImageWithBBox from '../SelfComponent/image_with_bbox'
+import Konva from 'konva'
+
 const AnnotateDetailPage = ({
   index,
   ds_id,
@@ -14,10 +21,15 @@ const AnnotateDetailPage = ({
 }) => {
   const [labels, setLabels] = useState<Labels | void>()
   const [currIdx, setCurrIdx] = useState<number>(parseInt(index))
-  const [currClassName, setCurrClassName] = useState<string>('')
+  const [selectedId, setSelectedId] = useState<number>(-1)
+  const [currClassIdx, setCurrClassIdx] = useState<number>(-1)
+  const [listColor, setListColor] = useState<listColor>([])
+  const figureRef = useRef<HTMLElement>(null)
+  const router = useRouter()
 
   const getDataDetailHandler = async (ds_id: string) => {
     const results = await getLabels({ ds_id })
+
     setLabels(results)
   }
 
@@ -41,10 +53,27 @@ const AnnotateDetailPage = ({
   })
 
   useEffect(() => {
-    getDataDetailHandler(ds_id)
+    if (!labels || listColor) return
+    let currListColor = []
+    for (let i of labels.list_labels) {
+      const className = i.toString()
+      const color = Konva.Util.getRandomColor()
+      const currColor = {
+        className,
+        color,
+      }
+      currListColor.push(currColor)
+    }
+
+    setListColor(currListColor)
+  }, [labels,listColor])
+
+  useEffect(() => {
+    if (ds_id) getDataDetailHandler(ds_id)
+    else router.replace('/annotation_assistant')
   }, [])
 
-  const handleUpdateImageClass = async ({
+  const handleupdateAnnotate = async ({
     ds_id,
     image_name,
     class_name,
@@ -53,7 +82,7 @@ const AnnotateDetailPage = ({
     image_name: string
     class_name: string
   }) => {
-    if (await updateImageClass({ ds_id, image_name, class_name })) {
+    if (await updateAnnotate({ ds_id, image_name, class_name })) {
       const result = await getLabels({ ds_id })
 
       result && setLabels(result)
@@ -68,7 +97,10 @@ const AnnotateDetailPage = ({
             {labels && currIdx > 0 ? (
               <div
                 className="btn bg-primary"
-                onClick={() => setCurrIdx(currIdx - 1)}
+                onClick={() => {
+                  // handleUpdateBbox(bbox)
+                  setCurrIdx(currIdx - 1)
+                }}
               >
                 Previous
               </div>
@@ -85,7 +117,10 @@ const AnnotateDetailPage = ({
             {labels && labels.images.length > currIdx + 1 ? (
               <div
                 className="btn bg-primary"
-                onClick={() => setCurrIdx(currIdx + 1)}
+                onClick={() => {
+                  // handleUpdateBbox(bbox)
+                  setCurrIdx(currIdx + 1)
+                }}
               >
                 Next
               </div>
@@ -96,49 +131,58 @@ const AnnotateDetailPage = ({
         </div>
         <>
           {labels && labels.images.length > currIdx && (
-            <figure className=" w-10/12 h-5/6 absolute bottom-5">
-              <img
-                src={`${API_URL}/label_tool/dataset_img?ds_id=${ds_id}&img_id=${
-                  labels.images[currIdx]
-                }&img_size=${500}`}
-                alt={labels.images[currIdx]}
-                className="w-full h-full"
-              />
+            <figure
+              className=" w-10/12 h-5/6 absolute bottom-5"
+              ref={figureRef}
+            >
+              {labels.ds_type == 'object_detection' ? (
+                <ImageWithBBox
+                  setSelectedId={setSelectedId}
+                  selectedId={selectedId}
+                  parentRef={figureRef}
+                  dsId={ds_id}
+                  imgaeIdx={currIdx}
+                  Labels={labels}
+                  setLabels={setLabels}
+                  listColor={listColor}
+                  currClassIdx={currClassIdx}
+                  setCurrClassIdx={setCurrClassIdx}
+                />
+              ) : (
+                <img
+                  src={`${API_URL}/label_tool/dataset_img?ds_id=${ds_id}&img_id=${
+                    labels.images[currIdx]
+                  }&img_size=${500}`}
+                  alt={labels.images[currIdx]}
+                  className="w-full h-full"
+                />
+              )}
             </figure>
           )}
         </>
       </div>
       <div className=" absolute right-0 border-base-300 border-l w-1/6 h-full flex flex-col items-center">
-        <div className=" w-full h-1/2 flex flex-col items-center overflow-y-scroll justify-around mt-5">
-          {labels && labels.list_labels ? (
-            labels.list_labels.map((item, index) => {
-              let isChecked = item == labels?.labels[currIdx]
-
-              return (
-                <div
-                  className={`btn w-3/4 m-2 ${isChecked && 'btn-primary'}`}
-                  key={index}
-                  onClick={() => {
-                    if (isChecked) return
-
-                    handleUpdateImageClass({
-                      ds_id: ds_id,
-                      image_name: labels.images[currIdx],
-                      class_name: item,
-                    })
-                  }}
-                >
-                  {item}
-                </div>
-              )
-            })
-          ) : (
-            <h1 className=" text-2xl text-center ">There no label</h1>
-          )}
-        </div>
+        {labels && labels.ds_type == 'object_detection' ? (
+          <SideBarForObjectDetection
+            imgaeIdx={currIdx}
+            Labels={labels}
+            setLabels={setLabels}
+            selectedId={selectedId}
+            listColor={listColor}
+            currClassIdx={currClassIdx}
+            setCurrClassIdx={setCurrClassIdx}
+          />
+        ) : (
+          <SideBarForClassification
+            labels={labels}
+            currIdx={currIdx}
+            handleupdateAnnotate={handleupdateAnnotate}
+            ds_id={ds_id}
+          />
+        )}
       </div>
 
-      <label htmlFor="my-modal-4" className="modal cursor-pointer">
+      {/* <label htmlFor="my-modal-4" className="modal cursor-pointer">
         <label className="modal-box relative flex justify-center" htmlFor="">
           <div className="form-control">
             <div className="input-group">
@@ -156,7 +200,7 @@ const AnnotateDetailPage = ({
             </div>
           </div>
         </label>
-      </label>
+      </label> */}
     </div>
   )
 }

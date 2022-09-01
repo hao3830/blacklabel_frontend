@@ -1,7 +1,7 @@
 import features from '../../constants/Feature'
 import Image from 'next/image'
 import Link from 'next/link'
-import header from '../../../static/header.png'
+import header from '../../../public/static/header.png'
 const HomePage = () => {
   return (
     <>

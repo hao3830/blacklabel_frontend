@@ -6,7 +6,6 @@ import {
 import { TaskRespone } from '../../../APIS/annotation_assistant/upload'
 import Step1 from './step_1'
 import Step2 from './step_2'
-import Step3 from './step_3'
 import { toast } from 'react-toastify'
 import {
   ImageUpload,
@@ -26,20 +25,14 @@ const UploadPage = () => {
       currImageUpload={currImageUpload}
       setCurrTask={setCurrTask}
     />
-  ) : currStep == 2 && currTask ? (
-    <Step2
-      setCurrStep={setCurrStep}
-      currTask={currTask}
-      setCurrLabelUpload={setCurrLabelUpload}
-    />
-  ) : currTask ? (
-    <Step3
-      currTask={currTask}
-      dataName={currImageUpload!.dataName}
-      currType={currImageUpload!.type}
-    />
   ) : (
-    <></>
+    currStep == 2 && currTask ? (
+      <Step2
+        setCurrStep={setCurrStep}
+        currTask={currTask}
+        setCurrLabelUpload={setCurrLabelUpload}
+      />
+    ): <></>
   )
 }
 export default UploadPage

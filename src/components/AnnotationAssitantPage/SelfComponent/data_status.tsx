@@ -64,8 +64,8 @@ export function DataStatus({ dataDetail }: { dataDetail: DataDetail }) {
             ></path>
           </svg>
         </div>
-        <div className="stat-title">Type Annotate</div>
-        <div className="stat-value">{dataDetail.type_annotate}</div>
+        <div className="stat-title">Dataset Type</div>
+        <div className="stat-value">{dataDetail.dataset_type}</div>
       </div>
     </div>
   )

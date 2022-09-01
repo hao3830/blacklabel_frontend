@@ -51,7 +51,7 @@ const AnnotatePage = () => {
         </div>
       </div>
       {labels ? (
-        <div className=" w-full h-3/4 flex flex-col items-center">
+        <div className=" w-full h-3/4 flex flex-col items-center ">
           <h3 className=" text-2xl mt-3 ml-5 place-self-start">
             {labels.images.length} images
           </h3>

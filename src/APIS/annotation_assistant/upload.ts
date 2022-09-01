@@ -25,6 +25,7 @@ const postImageData = async (
             formData.append("ds_type", "classification_type2")
         else if (dataType.toLocaleLowerCase() == "Classification (Zip file are subs-folder of difference class)".toLocaleLowerCase())
             formData.append("ds_type", "classification_type1")
+        else formData.append("ds_type", dataType)
     }
     if (imageLinkDrive) {
         formData.append('gdrive_link', imageLinkDrive)
@@ -32,7 +33,9 @@ const postImageData = async (
             formData.append("ds_type", "classification_type4")
         else if (dataType.toLocaleLowerCase() == "Classification (Zip file are subs-folder of difference class)".toLocaleLowerCase())
             formData.append("ds_type", "classification_type3")
+        else formData.append("ds_type", dataType)
     }
+
 
     try {
         const response = await axios.post<ITaskResponeResponse>('/label_tool/upload_dataset', formData)
@@ -68,8 +71,8 @@ const postImageData = async (
 }
 
 const postLabelData = async (
-    { labelFile, labelLinkDrive, dataType, dataId }:
-        { labelFile: File | null, labelLinkDrive: string, dataType: string, dataId: string }
+    { labelFile, labelLinkDrive, annotateType, dataId }:
+        { labelFile: File | null, labelLinkDrive: string, annotateType: string, dataId: string }
 ): Promise<TaskRespone | void> => {
 
     const formData = new FormData()
@@ -80,8 +83,10 @@ const postLabelData = async (
     if (labelLinkDrive) {
         formData.append('gdrive_link', labelLinkDrive)
     }
-    if (dataType.toLowerCase() == "subs-folder") {
-        formData.append('ds_type', 'classification')
+    if (annotateType.toLowerCase() == "subs-folder") {
+        formData.append('label_type', 'classification')
+    } else {
+        formData.append('label_type', annotateType)
     }
 
     try {

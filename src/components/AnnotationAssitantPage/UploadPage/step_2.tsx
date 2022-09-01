@@ -6,6 +6,8 @@ import {
   postLabelData,
   TaskRespone,
 } from '../../../APIS/annotation_assistant/upload'
+import LabelInfoTitle from '../../../constants/LabelInfo'
+import { useRouter } from 'next/router'
 
 const Step2 = ({
   setCurrStep,
@@ -20,6 +22,7 @@ const Step2 = ({
   const [currUiType, setCurrUiType] = useState<string>('Label Format')
   const [currLabelFile, setCurrLabelFile] = useState<File | null>(null)
   const [currType, setCurrType] = useState<string>('')
+  const router = useRouter()
 
   const handlePostDataClassify = async (labelUpload: LabelUpload) => {
     const id = toast.loading('Uploading...')
@@ -28,7 +31,7 @@ const Step2 = ({
       dataId: currTask.ds_id,
       labelFile: labelUpload.labelFile,
       labelLinkDrive: labelUpload.linkDrive,
-      dataType: labelUpload.type,
+      annotateType: labelUpload.type,
     })
 
     if (label) {
@@ -117,31 +120,13 @@ const Step2 = ({
       >
         <option disabled>Label Format</option>
         <option>Subs-Folder</option>
+        <option>Yolo</option>
       </select>
 
       {currType.toLowerCase() == 'subs-folder' ? (
-        <div className="alert shadow-lg w-fit max-w-3xl bg-black m-2">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-info flex-shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <span>
-              Your label file should be txt file which have two columns, first
-              column is your image name, second column is your image class (Tab
-              between two columns)
-            </span>
-          </div>
-        </div>
+        <LabelInfo title={LabelInfoTitle['subs-folder']} />
+      ) : currType.toLowerCase() == 'yolo' ? (
+        <LabelInfo title={LabelInfoTitle.yolo} />
       ) : null}
 
       {!currLabelFile && !currLinkDrive && currUiType == 'Label Format' && (
@@ -172,7 +157,7 @@ const Step2 = ({
             handlePostDataClassify(labelUpload)
             setCurrLabelUpload(labelUpload)
 
-            setCurrStep(3)
+            router.replace('/annotation_assistant')
           }}
         >
           {currLabelFile || currLinkDrive || currUiType != 'Label Format'
@@ -182,5 +167,28 @@ const Step2 = ({
       </div>
     </div>
   )
+
+  function LabelInfo({ title }: { title: string }) {
+    return (
+      <div className="alert shadow-lg w-fit max-w-3xl bg-black m-2">
+        <div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="stroke-info flex-shrink-0 w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <span>{title}</span>
+        </div>
+      </div>
+    )
+  }
 }
 export default Step2
