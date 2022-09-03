@@ -96,7 +96,6 @@ const BBox = ({
         }}
         onDragEnd={() => {
           if (shapeRef.current) updateBbox(shapeRef.current)
-          setSelectedId(-1)
           setCurrClassIdx(colorIdx)
         }}
         onTransformEnd={() => {
