@@ -64,9 +64,10 @@ const BBox = ({
     curr.labels[imageIdx][idx].x1 = (rect.x() * imgW) / stageWidth
     curr.labels[imageIdx][idx].x2 =
       ((rect.x() + rect.width()) * imgW) / stageWidth
-    curr.labels[imageIdx][idx].y1 = (rect.y() * imgW) / stageHeight
+    curr.labels[imageIdx][idx].y1 = (rect.y() * imgH) / stageHeight
     curr.labels[imageIdx][idx].y2 =
-      ((rect.y() + rect.height()) * imgW) / stageHeight
+      ((rect.y() + rect.height()) * imgH) / stageHeight
+
     setLabels(curr)
   }
 
@@ -84,7 +85,6 @@ const BBox = ({
         onClick={() => {
           if (typeEditor == 2) {
             Labels.labels[imageIdx].splice(idx, 1)
-
             forceUpdate()
             setLabels(Labels)
             return
@@ -96,7 +96,7 @@ const BBox = ({
         }}
         onDragEnd={() => {
           if (shapeRef.current) updateBbox(shapeRef.current)
-          setSelectedId(idx)
+          setSelectedId(-1)
           setCurrClassIdx(colorIdx)
         }}
         onTransformEnd={() => {
