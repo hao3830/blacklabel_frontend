@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { Labels } from '../../../models/annotation_assistant/labels'
 import { updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
 import { getLabels } from '../../../APIS/annotation_assistant/annotate'
-import showImageForClassification from './ComponentForDiffTypeDS/showImageForClassification'
-import showImageForObjectDetection from './ComponentForDiffTypeDS/showImageForObjectDetection'
+import showImageForClassification from './ComponentForDiffTypeDS/show_image_for_classification'
+import showImageForObjectDetection from './ComponentForDiffTypeDS/show_image_for_object_detection'
 
-const ClassificationContextMenu = ({
+const ContextMenu = ({
   labels,
   currPage,
   currDataId,
@@ -129,4 +129,4 @@ const ClassificationContextMenu = ({
   )
 }
 
-export default ClassificationContextMenu
+export default ContextMenu

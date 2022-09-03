@@ -1,6 +1,8 @@
+import { Rect as R } from 'konva/lib/shapes/Rect'
+import { Transformer as T } from 'konva/lib/shapes/Transformer'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Rect, Transformer } from 'react-konva'
-import { Labels } from '../../../models/annotation_assistant/labels'
+import { Bboxes, Labels } from '../../../models/annotation_assistant/labels'
 import { listColor } from '../../../models/annotation_assistant/list_color'
 
 const BBox = ({
@@ -17,12 +19,13 @@ const BBox = ({
   setCurrClassIdx,
   currClassIdx,
   typeEditor,
+  forceUpdate,
 }: {
   Labels: Labels
   setLabels: (key: Labels) => void
   imageIdx: number
   selectedId: number
-  items: any
+  items: Bboxes
   idx: number
   stageWidth: number
   stageHeight: number
@@ -31,19 +34,18 @@ const BBox = ({
   setCurrClassIdx: (key: number) => void
   currClassIdx: number
   typeEditor: number | void
+  forceUpdate: () => void
 }) => {
-  let shapeRef = useRef<any>(null)
-  let trRef = useRef<any>(null)
-  const imgW = Labels.image_size[imageIdx][0]
-  const imgH = Labels.image_size[imageIdx][1]
-  const [isDeleted, setIsDeleted] = useState(false)
+  let shapeRef = useRef<R>(null)
+  let trRef = useRef<T>(null)
   useEffect(() => {
-    if (!trRef || !trRef.current) return
+    if (!trRef || !trRef.current || !shapeRef.current) return
     trRef.current.nodes([shapeRef.current])
-    trRef.current.getLayer().batchDraw()
-    setIsDeleted(false)
+    trRef.current.getLayer()!.batchDraw()
   }, [selectedId])
 
+  const imgW = Labels.image_size[imageIdx][0]
+  const imgH = Labels.image_size[imageIdx][1]
   let newX1 = (items['x1'] * stageWidth) / imgW
   let newY1 = (items['y1'] * stageHeight) / imgH
   let newX2 = (items['x2'] * stageWidth) / imgW
@@ -55,7 +57,18 @@ const BBox = ({
     (element) => element.className == items['class_name']
   )
 
-  if (colorIdx == -1 || isDeleted) return <></>
+  if (colorIdx == -1) return <></>
+
+  const updateBbox = async (rect: R) => {
+    let curr = Labels
+    curr.labels[imageIdx][idx].x1 = (rect.x() * imgW) / stageWidth
+    curr.labels[imageIdx][idx].x2 =
+      ((rect.x() + rect.width()) * imgW) / stageWidth
+    curr.labels[imageIdx][idx].y1 = (rect.y() * imgW) / stageHeight
+    curr.labels[imageIdx][idx].y2 =
+      ((rect.y() + rect.height()) * imgW) / stageHeight
+    setLabels(curr)
+  }
 
   return (
     <Fragment key={idx}>
@@ -70,10 +83,10 @@ const BBox = ({
         ref={shapeRef}
         onClick={() => {
           if (typeEditor == 2) {
-            let curr = Labels
-            curr.labels[imageIdx].splice(idx, 1)
-            setLabels(curr)
-            setIsDeleted(true)
+            Labels.labels[imageIdx].splice(idx, 1)
+
+            forceUpdate()
+            setLabels(Labels)
             return
           }
           if (typeEditor != 0 && typeEditor != 3) return
@@ -81,9 +94,13 @@ const BBox = ({
           setSelectedId(idx)
           setCurrClassIdx(colorIdx)
         }}
-        onDragMove={() => {
+        onDragEnd={() => {
+          if (shapeRef.current) updateBbox(shapeRef.current)
           setSelectedId(idx)
           setCurrClassIdx(colorIdx)
+        }}
+        onTransformEnd={() => {
+          if (shapeRef.current) updateBbox(shapeRef.current)
         }}
         draggable={typeEditor == 0}
       />
@@ -91,6 +108,7 @@ const BBox = ({
       {selectedId == idx && (
         <Transformer
           ref={trRef}
+          rotateEnabled={false}
           boundBoxFunc={(oldBox, newBox) => {
             if (typeEditor != 0) return oldBox
             return newBox

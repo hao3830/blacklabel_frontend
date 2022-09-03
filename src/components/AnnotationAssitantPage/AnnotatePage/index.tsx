@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { getData } from '../../../APIS/annotation_assistant/data'
 import { DataSelecter } from '../SelfComponent/data_selecter'
 import { getLabels } from '../../../APIS/annotation_assistant/annotate'
-import ClassificationContextMenu from '../SelfComponent/classification_context_menu'
+import ContextMenu from '../SelfComponent/context_menu'
 import { Data } from '../../../models/annotation_assistant/data_detail'
 
 const AnnotatePage = () => {
@@ -56,7 +56,7 @@ const AnnotatePage = () => {
             {labels.images.length} images
           </h3>
 
-          <ClassificationContextMenu
+          <ContextMenu
             labels={labels}
             currPage={currPage}
             currDataId={currDataId ? currDataId : ''}

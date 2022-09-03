@@ -1,4 +1,4 @@
-import { useEffect, useState, RefObject } from 'react'
+import { useEffect, useState, RefObject, useCallback } from 'react'
 import { Bboxes, Labels } from '../../../models/annotation_assistant/labels'
 import { API_URL } from '../../../constants/Api'
 import { Image as Img, Layer, Stage } from 'react-konva'
@@ -9,8 +9,7 @@ import {
   getLabels,
   updateAnnotate,
 } from '../../../APIS/annotation_assistant/annotate'
-import { toast } from 'react-toastify'
-import { Toast } from 'react-toastify/dist/components'
+
 const ImageWithBBox = ({
   setSelectedId,
   selectedId,
@@ -40,38 +39,31 @@ const ImageWithBBox = ({
   const [stageWidth, setStageWidth] = useState<number>(0)
   const [stageHeight, setStageHeight] = useState<number>(0)
   const [image, setImage] = useState<HTMLImageElement>()
-  const [newAnnotation, setNewAnnotation] = useState<any>([])
+  const [newAnnotation, setNewAnnotation] = useState<Bboxes[]>([])
 
-  const updateBboxHandler = async () => {
+  const [, updateState] = useState({})
+  const forceUpdate = useCallback(() => updateState({}), [])
+
+  const updateBboxHandler = async (Idx: number) => {
     let bbox: Bboxes[] = []
     let b: Bboxes
-    let currLabel = Labels
-    for (b of currLabel.labels[imageIdx]) {
-      const imgW = Labels.image_size[imageIdx][0]
-      const imgH = Labels.image_size[imageIdx][1]
-
+    for (b of Labels.labels[Idx]) {
       let curr = {
-        x1: (b.x1 * stageWidth) / imgW,
-        y1: (b.y1 * stageHeight) / imgH,
-        x2: (b.x2 * stageWidth) / imgW,
-        y2: (b.y2 * stageHeight) / imgH,
+        x1: Math.round(b.x1),
+        y1: Math.round(b.y1),
+        x2: Math.round(b.x2),
+        y2: Math.round(b.y2),
         class_name: b.class_name,
       }
 
       bbox.push(curr)
     }
-
-    const uploadResult = await updateAnnotate({
+    await updateAnnotate({
       ds_id: dsId,
       image_name: Labels.images[imageIdx],
       bbox: bbox,
       class_name: 'None',
     })
-    if (uploadResult) {
-      const result = await getLabels({ ds_id: dsId })
-      console.log(result)
-      result && setLabels(result)
-    }
   }
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -103,7 +95,14 @@ const ImageWithBBox = ({
     }
   }, [parentRef])
 
+  const handleReload = (e: BeforeUnloadEvent) => {
+    e.preventDefault()
+    e.NONE
+    updateBboxHandler(imageIdx)
+  }
+
   useEffect(() => {
+    window.addEventListener('beforeunload', handleReload)
     setSelectedId(-1)
     let image = new Image()
     image.src = `${API_URL}/label_tool/dataset_img?ds_id=${dsId}&img_id=${
@@ -112,8 +111,8 @@ const ImageWithBBox = ({
     setImage(image)
 
     return () => {
-      // toast.info('Updatin/g')
-      updateBboxHandler()
+      updateBboxHandler(imageIdx)
+      window.removeEventListener('beforeunload', handleReload)
     }
   }, [imageIdx])
 
@@ -177,7 +176,6 @@ const ImageWithBBox = ({
       setLabels(curr)
     }
   }
-
   const handleMouseMove = (event: KonvaEventObject<MouseEvent>) => {
     if (newAnnotation.length === 1 && isDrawing) {
       const sx = newAnnotation[0].x1
@@ -231,24 +229,27 @@ const ImageWithBBox = ({
       </Layer>
       <Layer>
         {Labels &&
-          Labels.labels[imageIdx].map((items, idx) => (
-            <BBox
-              key={idx}
-              idx={idx}
-              items={items}
-              Labels={Labels}
-              setLabels={setLabels}
-              imageIdx={imageIdx}
-              selectedId={selectedId}
-              stageWidth={stageWidth}
-              stageHeight={stageHeight}
-              setSelectedId={setSelectedId}
-              listColor={listColor}
-              setCurrClassIdx={setCurrClassIdx}
-              currClassIdx={currClassIdx}
-              typeEditor={typeEditor}
-            />
-          ))}
+          Labels.labels[imageIdx].map((items, idx) => {
+            return (
+              <BBox
+                key={idx}
+                idx={idx}
+                items={items}
+                Labels={Labels}
+                setLabels={setLabels}
+                imageIdx={imageIdx}
+                selectedId={selectedId}
+                stageWidth={stageWidth}
+                stageHeight={stageHeight}
+                setSelectedId={setSelectedId}
+                listColor={listColor}
+                setCurrClassIdx={setCurrClassIdx}
+                currClassIdx={currClassIdx}
+                typeEditor={typeEditor}
+                forceUpdate={forceUpdate}
+              />
+            )
+          })}
       </Layer>
     </Stage>
   ) : (

@@ -39,7 +39,7 @@ const getLabels = async ({ ds_id }: { ds_id: string }): Promise<Labels | void> =
 }
 
 type UpdateAnnotate = {
-    ds_id: string, image_name: string, class_name?: string, bbox?: Bboxes[]
+    ds_id: string, image_name: string, class_name?: string, bbox_list?: Bboxes[]
 }
 
 const updateAnnotate = async ({ ds_id, image_name, class_name, bbox }: { ds_id: string, image_name: string, class_name?: string, bbox?: Bboxes[] }): Promise<boolean | void> => {
@@ -50,8 +50,7 @@ const updateAnnotate = async ({ ds_id, image_name, class_name, bbox }: { ds_id: 
             ds_id: ds_id,
             image_name: image_name,
             class_name: class_name,
-            bbox: bbox
-
+            bbox_list: bbox
         }
 
         const respone = await axios.put<IResponse>('/label_tool/annotate', JSON.stringify(formData))
@@ -81,7 +80,8 @@ const updateAnnotate = async ({ ds_id, image_name, class_name, bbox }: { ds_id: 
         console.log(error)
         toast.error("Have error when get data, please try again")
     }
-
 }
+
+
 
 export { getLabels, updateAnnotate } 

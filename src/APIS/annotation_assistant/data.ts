@@ -96,6 +96,47 @@ const postNewClassName = async ({ className, dsId }: {
         console.log(error)
         toast.error("Have error when get data info, please try again")
     }
+}
+
+const UpdateClassName = async (
+    {
+        dsId,
+        oldClassName,
+        newClassName,
+    }: {
+        dsId: string
+        oldClassName: string
+        newClassName: string
+    }) => {
+
+    try {
+
+        const formData = new FormData()
+        formData.append("ds_id", dsId)
+        formData.append("old_class_name", oldClassName)
+        formData.append("new_class_name", newClassName)
+
+        const response = await axios.post<IResponse>("/label_tool/replace_class_dataset", formData)
+
+        if (response.status != 200) {
+            toast.error("Have error when get data detail, please try again")
+            return
+        }
+
+        const data = response.data
+        if (data.code != 1000) {
+            console.log(data)
+            toast.error("Can not process data return")
+            return
+        }
+
+        return true
+
+    }
+    catch (error) {
+        console.log(error)
+        toast.error("Have error when get data info, please try again")
+    }
 
 }
 
@@ -131,4 +172,4 @@ const getLabelFile = async ({ ds_id, annotation_type }: { ds_id: string, annotat
 
 }
 
-export { getData, getDataDetail, postNewClassName, getLabelFile }
+export { getData, getDataDetail, postNewClassName, getLabelFile, UpdateClassName }
