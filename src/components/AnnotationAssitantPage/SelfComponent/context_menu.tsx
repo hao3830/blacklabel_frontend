@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { Labels } from '../../../models/annotation_assistant/labels'
 import { updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
 import { getLabels } from '../../../APIS/annotation_assistant/annotate'
-import showImageForClassification from './ComponentForDiffTypeDS/show_image_for_classification'
-import showImageForObjectDetection from './ComponentForDiffTypeDS/show_image_for_object_detection'
+import ShowImageForClassification from './ComponentForDiffTypeDS/show_image_for_classification'
+import ShowImageForObjectDetection from './ComponentForDiffTypeDS/show_image_for_object_detection'
 
 const ContextMenu = ({
   labels,
@@ -69,21 +69,22 @@ const ContextMenu = ({
         {labels.images.map((image, index) => {
           if (index < (currPage - 1) * 10 || index >= currPage * 10) return
 
-          return labels.ds_type == 'object_detection'
-            ? showImageForObjectDetection(
-                index,
-                labels,
-                handleOnContextMenu,
-                currDataId,
-                image
-              )
-            : showImageForClassification(
-                index,
-                labels,
-                handleOnContextMenu,
-                currDataId,
-                image
-              )
+          return labels.ds_type == 'object_detection' ? (
+            <ShowImageForObjectDetection
+              index={index}
+              labels={labels}
+              handleOnContextMenu={handleOnContextMenu}
+              currDataId={currDataId}
+            />
+          ) : (
+            <ShowImageForClassification
+              index={index}
+              labels={labels}
+              handleOnContextMenu={handleOnContextMenu}
+              currDataId={currDataId}
+              image={image}
+            />
+          )
         })}
       </div>
 

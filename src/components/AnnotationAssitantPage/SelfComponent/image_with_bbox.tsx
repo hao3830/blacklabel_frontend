@@ -5,10 +5,7 @@ import { Image as Img, Layer, Stage } from 'react-konva'
 import { KonvaEventObject } from 'konva/lib/Node'
 import BBox from './bbox'
 import { listColor } from '../../../models/annotation_assistant/list_color'
-import {
-  getLabels,
-  updateAnnotate,
-} from '../../../APIS/annotation_assistant/annotate'
+import { updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
 
 const ImageWithBBox = ({
   setSelectedId,

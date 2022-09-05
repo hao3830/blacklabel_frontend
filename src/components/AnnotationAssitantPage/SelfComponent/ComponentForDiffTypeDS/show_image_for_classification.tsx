@@ -2,13 +2,19 @@ import Link from 'next/link'
 import { API_URL } from '../../../../constants/Api'
 import { Labels } from '../../../../models/annotation_assistant/labels'
 
-const showImageForClassification = (
-  index: number,
-  labels: Labels,
-  handleOnContextMenu: (event: React.MouseEvent, imageName: string) => void,
-  currDataId: string,
+const ShowImageForClassification = ({
+  index,
+  labels,
+  handleOnContextMenu,
+  currDataId,
+  image,
+}: {
+  index: number
+  labels: Labels
+  handleOnContextMenu: (event: React.MouseEvent, imageName: string) => void
+  currDataId: string
   image: string
-) => {
+}) => {
   let label = ''
   if (index < labels.labels.length) label = labels.labels[index]
 
@@ -38,4 +44,4 @@ const showImageForClassification = (
   )
 }
 
-export default showImageForClassification
+export default ShowImageForClassification

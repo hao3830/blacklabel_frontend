@@ -1,3 +1,4 @@
+import { Loading } from '../SelfComponent/Loading'
 import NextPageButton from '../SelfComponent/next_page_button'
 import type { Labels } from '../../../models/annotation_assistant/labels'
 import { useState, useEffect } from 'react'
@@ -6,6 +7,8 @@ import { DataSelecter } from '../SelfComponent/data_selecter'
 import { getLabels } from '../../../APIS/annotation_assistant/annotate'
 import ContextMenu from '../SelfComponent/context_menu'
 import { Data } from '../../../models/annotation_assistant/data_detail'
+import { listColor } from '../../../models/annotation_assistant/list_color'
+import Konva from 'konva'
 
 const AnnotatePage = () => {
   const [data, setData] = useState<Data[] | void>()
@@ -13,7 +16,8 @@ const AnnotatePage = () => {
   const [currDataId, setCurrDataaId] = useState<string | void>()
   const [currPage, setCurrPage] = useState<number>(1)
   const [labels, setLabels] = useState<Labels | void>()
-
+  const [listColor, setListColor] = useState<listColor>([])
+  const [isFetchingData, setIsFetchingData] = useState<boolean>(false)
   const getDataHandler = async () => {
     const results = await getData()
     setData(results)
@@ -22,8 +26,24 @@ const AnnotatePage = () => {
   const getDataDetailHandler = async (ds_id: string) => {
     const results = await getLabels({ ds_id: ds_id })
     setLabels(results)
+    setIsFetchingData(false)
   }
 
+  useEffect(() => {
+    if (!labels || listColor.length) return
+    let currListColor = []
+    for (let i of labels.list_labels) {
+      const className = i.toString()
+      const color = Konva.Util.getRandomColor()
+      const currColor = {
+        className,
+        color,
+      }
+      currListColor.push(currColor)
+    }
+
+    setListColor(currListColor)
+  }, [labels, listColor])
   useEffect(() => {
     getDataHandler()
   }, [])
@@ -32,6 +52,7 @@ const AnnotatePage = () => {
     if (!currDataId) return
 
     getDataDetailHandler(currDataId)
+    setIsFetchingData(true)
   }, [currDataId])
 
   return (
@@ -50,7 +71,9 @@ const AnnotatePage = () => {
           />
         </div>
       </div>
-      {labels ? (
+      {isFetchingData ? (
+        <Loading />
+      ) : labels ? (
         <div className=" w-full h-3/4 flex flex-col items-center ">
           <h3 className=" text-2xl mt-3 ml-5 place-self-start">
             {labels.images.length} images
