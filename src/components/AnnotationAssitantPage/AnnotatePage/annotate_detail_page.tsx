@@ -185,26 +185,6 @@ const AnnotateDetailPage = ({
           />
         )}
       </div>
-
-      {/* <label htmlFor="my-modal-4" className="modal cursor-pointer">
-        <label className="modal-box relative flex justify-center" htmlFor="">
-          <div className="form-control">
-            <div className="input-group">
-              <input
-                type="text"
-                placeholder="Type Image Class Name"
-                className="input input-bordered"
-                value={currClassName}
-                onChange={(e) => setCurrClassName(e.target.value)}
-              />
-
-              <button className="btn btn-square bg-primary " onClick={() => {}}>
-                Save
-              </button>
-            </div>
-          </div>
-        </label>
-      </label> */}
     </div>
   )
 }

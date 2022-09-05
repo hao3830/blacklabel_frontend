@@ -1,7 +1,7 @@
 import { useEffect, useState, RefObject, useCallback } from 'react'
 import { Bboxes, Labels } from '../../../models/annotation_assistant/labels'
 import { API_URL } from '../../../constants/Api'
-import { Image as Img, Layer, Stage } from 'react-konva'
+import { Image as Img, Layer, Line, Stage } from 'react-konva'
 import { KonvaEventObject } from 'konva/lib/Node'
 import BBox from './bbox'
 import { listColor } from '../../../models/annotation_assistant/list_color'
@@ -37,6 +37,7 @@ const ImageWithBBox = ({
   const [stageHeight, setStageHeight] = useState<number>(0)
   const [image, setImage] = useState<HTMLImageElement>()
   const [newAnnotation, setNewAnnotation] = useState<Bboxes[]>([])
+  const [pos, setPos] = useState({ x: 0, y: 0 })
 
   const [, updateState] = useState({})
   const forceUpdate = useCallback(() => updateState({}), [])
@@ -174,10 +175,11 @@ const ImageWithBBox = ({
     }
   }
   const handleMouseMove = (event: KonvaEventObject<MouseEvent>) => {
+    let { x, y } = event.target.getStage()!.getPointerPosition()!
+    setPos({ x, y })
     if (newAnnotation.length === 1 && isDrawing) {
       const sx = newAnnotation[0].x1
       const sy = newAnnotation[0].y1
-      let { x, y } = event.target.getStage()!.getPointerPosition()!
 
       const imgW = Labels.image_size[imageIdx][0]
       const imgH = Labels.image_size[imageIdx][1]
@@ -211,6 +213,16 @@ const ImageWithBBox = ({
       onMouseDown={(e) => handleMouseDown(e)}
       onMouseUp={(e) => handleMouseUp(e)}
       onMouseMove={(e) => handleMouseMove(e)}
+      style={{
+        cursor:
+          typeEditor == 0
+            ? 'grab'
+            : typeEditor == 1
+            ? 'crosshair'
+            : typeEditor == 2
+            ? 'cell'
+            : '',
+      }}
     >
       <Layer>
         <Img
@@ -248,6 +260,22 @@ const ImageWithBBox = ({
             )
           })}
       </Layer>
+      {typeEditor == 1 && (
+        <Layer>
+          <Line
+            points={[0, pos.y, stageWidth, pos.y]}
+            stroke={'gray'}
+            lineJoin={'round'}
+            dash={[33, 10]}
+          />
+          <Line
+            points={[pos.x, 0, pos.x, stageHeight]}
+            stroke={'gray'}
+            lineJoin={'round'}
+            dash={[33, 10]}
+          />
+        </Layer>
+      )}
     </Stage>
   ) : (
     <div key={'a'}></div>
