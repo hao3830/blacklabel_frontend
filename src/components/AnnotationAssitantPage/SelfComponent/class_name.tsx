@@ -1,15 +1,20 @@
 import React from 'react'
-import { Item, Menu, useContextMenu } from 'react-contexify'
+import { Item, ItemParams, Menu, useContextMenu } from 'react-contexify'
 import { DataDetail } from '../../../models/annotation_assistant/data_detail'
 import NextPageButton from './next_page_button'
+import { deleteClassName } from '../../../APIS/annotation_assistant/data'
 export function ClassName({
+  currDataId,
   dataDetail,
   currPage,
   setCurrPage,
+  getDataDetailHandler,
 }: {
+  currDataId: string
   dataDetail: DataDetail
   currPage: number
   setCurrPage: (key: number) => void
+  getDataDetailHandler: (key: string) => void
 }) {
   const contextMenuId = `contextMenuForClassName`
   const { show } = useContextMenu({ id: contextMenuId })
@@ -27,7 +32,15 @@ export function ClassName({
     })
   }
 
-  const handleClickDelete = () => {}
+  const handleClickDelete = async (args: ItemParams) => {
+    const results = await deleteClassName({
+      dsId: currDataId,
+      className: args.props.oldClassName,
+    })
+    if (results) {
+      getDataDetailHandler(currDataId)
+    }
+  }
 
   return (
     <>
@@ -42,7 +55,7 @@ export function ClassName({
           return (
             <div
               key={index}
-              className=" w-1/3 h-16 bg-primary rounded flex justify-center items-center text-white mt-3"
+              className=" w-2/3 h-16 bg-primary rounded flex justify-center items-center text-white mt-3 overflow-hidden"
               onContextMenu={(event) => handleOnContextMenu(event, labels)}
             >
               {labels}
@@ -50,7 +63,7 @@ export function ClassName({
           )
         })}
         <label
-          className="w-1/3 btn h-16 bg-primary rounded flex justify-center items-center modal-button text-white mt-3"
+          className="w-2/3 btn h-16 bg-primary rounded flex justify-center items-center modal-button text-white mt-3"
           htmlFor="add-class-modal"
         >
           +
@@ -62,7 +75,7 @@ export function ClassName({
           length={dataDetail.list_labels.length}
           setCurrPage={setCurrPage}
           currPage={currPage}
-          itemPerPage={10}
+          itemPerPage={15}
         />
       )}
     </>

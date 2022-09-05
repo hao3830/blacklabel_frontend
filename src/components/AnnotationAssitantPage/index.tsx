@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react'
 import {
   getData,
   getDataDetail,
-  getLabelFile,
   postNewClassName,
 } from '../../APIS/annotation_assistant/data'
 import { DataDetail, Data } from '../../models/annotation_assistant/data_detail'
@@ -42,16 +41,6 @@ const AnnotationAssitantHomePage = () => {
     }
   }
 
-  const getLabelsHandler = async ({
-    ds_id,
-    annotation_type,
-  }: {
-    ds_id: string
-    annotation_type: string
-  }) => {
-    await getLabelFile({ ds_id, annotation_type })
-  }
-
   useEffect(() => {
     getDataHandler()
   }, [])
@@ -83,6 +72,8 @@ const AnnotationAssitantHomePage = () => {
 
             {tabIdx == 0 && (
               <ClassName
+                getDataDetailHandler={getDataDetailHandler}
+                currDataId={currDataId!}
                 dataDetail={dataDetail}
                 currPage={currPage}
                 setCurrPage={setCurrPage}

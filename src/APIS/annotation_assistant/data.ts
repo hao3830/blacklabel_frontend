@@ -98,7 +98,37 @@ const postNewClassName = async ({ className, dsId }: {
     }
 }
 
-const UpdateClassName = async (
+const deleteClassName = async ({ dsId, className }: { dsId: string, className: string }) => {
+    try {
+        const formData = new FormData()
+        formData.append("ds_id", dsId)
+        formData.append("class_name", className)
+
+        const response = await axios.delete<IResponse>("/label_tool/dataset/remove_class", {
+            data: formData
+        })
+
+        if (response.status != 200) {
+            toast.error("Have error when get data detail, please try again")
+            return
+        }
+
+        const data = response.data
+        if (data.code != 1000) {
+            console.log(data)
+            toast.error("Can not process data return")
+            return
+        }
+
+        return true
+
+    } catch (error) {
+        console.log(error)
+        toast.error("Have error when get data info, please try again")
+    }
+}
+
+const updateClassName = async (
     {
         dsId,
         oldClassName,
@@ -172,4 +202,4 @@ const getLabelFile = async ({ ds_id, annotation_type }: { ds_id: string, annotat
 
 }
 
-export { getData, getDataDetail, postNewClassName, getLabelFile, UpdateClassName }
+export { getData, getDataDetail, postNewClassName, getLabelFile, updateClassName, deleteClassName }

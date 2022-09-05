@@ -1,4 +1,5 @@
 import { BiArrowFromBottom, BiData, BiEdit } from 'react-icons/bi'
+import { GiAutoRepair } from 'react-icons/gi'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import RouteButton from './route_button'
@@ -14,6 +15,8 @@ const AnnotationAssitantPageSideBar = () => {
       setSelectedPage(2)
     else if (router.pathname == '/annotation_assistant/upload')
       setSelectedPage(1)
+    else if (router.pathname == '/annotation_assistant/auto_label')
+      setSelectedPage(3)
     else setSelectedPage(0)
   })
 
@@ -42,7 +45,6 @@ const AnnotationAssitantPageSideBar = () => {
           icon={<BiArrowFromBottom size="1.25rem" />}
           text="Upload"
         />
-
         <RouteButton
           routeName="/annotation_assistant/annotate"
           selectedPage={selectedPage}
@@ -50,6 +52,14 @@ const AnnotationAssitantPageSideBar = () => {
           id={2}
           icon={<BiEdit size="1.25rem" />}
           text="Annotate"
+        />
+        <RouteButton
+          routeName="/annotation_assistant/auto_label"
+          selectedPage={selectedPage}
+          setSelectedPage={setSelectedPage}
+          id={3}
+          icon={<GiAutoRepair size="1.25rem" />}
+          text="Auto Label"
         />
       </div>
 

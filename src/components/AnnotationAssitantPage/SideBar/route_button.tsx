@@ -23,7 +23,7 @@ const RouteButton = ({
   return (
     <>
       <div
-        className={` overflow-hidden btn duration-300 p-3 border border-base-300  bg-base-100 rounded-box h-1/2 w-11/12 items-center flex ${
+        className={` overflow-hidden btn duration-300 p-3 border border-base-300  bg-base-100 rounded-box  h-1/2 w-11/12 flex ${
           selectedPage != id ? 'text-white' : 'text-primary'
         } hover:cursor-pointer`}
         onClick={handleClick}
