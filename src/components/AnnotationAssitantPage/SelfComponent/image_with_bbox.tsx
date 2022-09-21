@@ -176,7 +176,7 @@ const ImageWithBBox = ({
   }
   const handleMouseMove = (event: KonvaEventObject<MouseEvent>) => {
     let { x, y } = event.target.getStage()!.getPointerPosition()!
-    setPos({ x, y })
+    typeEditor == 1 && setPos({ x, y })
     if (newAnnotation.length === 1 && isDrawing) {
       const sx = newAnnotation[0].x1
       const sy = newAnnotation[0].y1

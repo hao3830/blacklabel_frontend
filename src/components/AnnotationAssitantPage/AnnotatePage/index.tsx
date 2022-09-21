@@ -1,4 +1,4 @@
-import { Loading } from '../SelfComponent/Loading'
+import { Loading } from '../SelfComponent/loading'
 import NextPageButton from '../SelfComponent/next_page_button'
 import type { Labels } from '../../../models/annotation_assistant/labels'
 import { useState, useEffect } from 'react'
