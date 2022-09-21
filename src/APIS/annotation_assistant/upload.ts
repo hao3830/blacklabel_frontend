@@ -25,7 +25,8 @@ const postImageData = async (
             formData.append("ds_type", "classification_type2")
         else if (dataType.toLocaleLowerCase() == "Classification (Zip file are subs-folder of difference class)".toLocaleLowerCase())
             formData.append("ds_type", "classification_type1")
-        else formData.append("ds_type", dataType)
+        else if (dataType.toLocaleLowerCase() == "Object Detection (Zip file olny images)".toLocaleLowerCase())
+            formData.append("ds_type", "object_detection")
     }
     if (imageLinkDrive) {
         formData.append('gdrive_link', imageLinkDrive)
@@ -33,7 +34,8 @@ const postImageData = async (
             formData.append("ds_type", "classification_type4")
         else if (dataType.toLocaleLowerCase() == "Classification (Zip file are subs-folder of difference class)".toLocaleLowerCase())
             formData.append("ds_type", "classification_type3")
-        else formData.append("ds_type", dataType)
+        else if (dataType.toLocaleLowerCase() == "Object Detection (Zip file olny images)".toLocaleLowerCase())
+            formData.append("ds_type", "object_detection")
     }
 
 

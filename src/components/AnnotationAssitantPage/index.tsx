@@ -82,7 +82,7 @@ const AnnotationAssitantHomePage = () => {
             {tabIdx == 2 && (
               <a
                 className="btn mt-5"
-                href={`${API_URL}/label_tool/annotation/download?ds_id=${currDataId}&annotation_type=${dataDetail.dataset_type}`}
+                href={`${API_URL}/label_tool/dataset/download?ds_id=${currDataId}&annotation_type=${dataDetail.dataset_type}`}
               >
                 Dowload Labels
               </a>

@@ -4,6 +4,7 @@ import { Labels } from '../../../../models/annotation_assistant/labels'
 import { Image as Img, Layer, Stage } from 'react-konva'
 import { useEffect, useRef, useState } from 'react'
 import { Rect } from 'react-konva'
+import uuid from 'react-uuid'
 
 const ShowImageForObjectDetection = ({
   index,
@@ -35,7 +36,7 @@ const ShowImageForObjectDetection = ({
   return (
     <div
       className="card w-5/6 h-5/6  bg-base-300 shadow-xl  relative justify-center  flex flex-col  items-center  text-white"
-      key={index}
+      key={uuid()}
       onContextMenu={(event) =>
         handleOnContextMenu(event, labels.images[index])
       }
@@ -43,22 +44,25 @@ const ShowImageForObjectDetection = ({
       <Link
         href={`/annotation_assistant/${index}/${currDataId}`}
         shallow={true}
+        key={uuid()}
       >
         <figure
           className=" w-full h-full  absolute hover:cursor-pointer"
           ref={parentRef}
+          key={uuid()}
         >
-          <Stage width={stageWidth} height={stageHeight}>
-            <Layer>
+          <Stage width={stageWidth} height={stageHeight} key={uuid()}>
+            <Layer key={uuid()}>
               <Img
                 image={img}
                 x={0}
                 y={0}
                 width={stageWidth}
                 height={stageHeight}
+                key={uuid()}
               />
             </Layer>
-            <Layer>
+            <Layer key={uuid()}>
               {labels.labels[index].map((item, idx) => {
                 const imgW = labels.image_size[index][0]
                 const imgH = labels.image_size[index][1]
@@ -77,7 +81,7 @@ const ShowImageForObjectDetection = ({
                     height={newH}
                     stroke={'red'}
                     strokeWidth={0.5}
-                    key={idx}
+                    key={uuid()}
                   ></Rect>
                 )
               })}

@@ -139,7 +139,7 @@ const Step1 = ({
           <option>
             Classification (Zip file are subs-folder of difference class)
           </option>
-          <option>Object Detection</option>
+          <option>Object Detection (Zip file olny images)</option>
         </select>
 
         <button

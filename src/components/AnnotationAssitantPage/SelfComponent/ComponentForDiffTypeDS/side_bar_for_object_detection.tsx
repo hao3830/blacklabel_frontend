@@ -25,7 +25,7 @@ export function SideBarForObjectDetection({
   setTypeEditor: (key: number) => void
 }) {
   const [currPage, setCurrPage] = useState(1)
-
+  console.log(currClassIdx)
   return (
     <div className=" w-full h-full  flex flex-col items-center relative justify-center  mt-5 overflow-hidden">
       <div className=" flex w-full h-1/6 absolute top-0 justify-around overflow-hidden">
@@ -57,7 +57,6 @@ export function SideBarForObjectDetection({
       {listColor &&
         listColor.map((item, index) => {
           if (index < (currPage - 1) * 5 || index >= currPage * 5) return
-
           return (
             <div
               className={`btn mt-3  h-10 ${
@@ -74,7 +73,8 @@ export function SideBarForObjectDetection({
                     listColor[index].className
                   setLabels(currLabels)
                 }
-                setCurrClassIdx(index)
+                if (currClassIdx == index) setCurrClassIdx(-1)
+                else setCurrClassIdx(index)
               }}
             >
               {item.className}

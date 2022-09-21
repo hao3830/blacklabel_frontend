@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import uuid from 'react-uuid'
 
 const NextPageButton = ({
   length,
@@ -21,6 +22,7 @@ const NextPageButton = ({
         <button
           className={`btn ${i == currPage && 'btn-active'}`}
           onClick={() => setCurrPage(i)}
+          key={uuid()}
         >
           {i}
         </button>

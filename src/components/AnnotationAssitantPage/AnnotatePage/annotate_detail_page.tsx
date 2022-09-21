@@ -6,7 +6,7 @@ import {
   getLabels,
   updateAnnotate,
 } from '../../../APIS/annotation_assistant/annotate'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { API_URL } from '../../../constants/Api'
 import { listColor } from '../../../models/annotation_assistant/list_color'
 import ImageWithBBox from '../SelfComponent/image_with_bbox'
@@ -31,6 +31,20 @@ const AnnotateDetailPage = ({
   const getDataDetailHandler = async (ds_id: string) => {
     const results = await getLabels({ ds_id })
 
+    if (!results || listColor.length) return
+    let currListColor = []
+    for (let i of results.list_labels) {
+      const className = i.toString()
+      const color = Konva.Util.getRandomColor()
+      const currColor = {
+        className,
+        color,
+      }
+      currListColor.push(currColor)
+    }
+
+    setListColor(currListColor)
+
     setLabels(results)
   }
 
@@ -54,26 +68,9 @@ const AnnotateDetailPage = ({
   })
 
   useEffect(() => {
-    if (!labels || listColor.length) return
-    let currListColor = []
-    for (let i of labels.list_labels) {
-      const className = i.toString()
-      const color = Konva.Util.getRandomColor()
-      const currColor = {
-        className,
-        color,
-      }
-      currListColor.push(currColor)
-    }
-
-    setListColor(currListColor)
-  }, [labels, listColor])
-
-  useEffect(() => {
     if (ds_id) getDataDetailHandler(ds_id)
     else router.replace('/annotation_assistant')
   }, [])
-
   const handleupdateAnnotate = async ({
     ds_id,
     image_name,
@@ -111,7 +108,9 @@ const AnnotateDetailPage = ({
           </>
           <>
             {labels && (
-              <h1 className=" text-2xl text-white">{labels.images[currIdx]}</h1>
+              <h1 className=" text-2xl text-white overflow-hidden">
+                {labels.images[currIdx]}
+              </h1>
             )}
           </>
           <>

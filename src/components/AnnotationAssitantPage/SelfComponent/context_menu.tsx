@@ -5,6 +5,7 @@ import { updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
 import { getLabels } from '../../../APIS/annotation_assistant/annotate'
 import ShowImageForClassification from './ComponentForDiffTypeDS/show_image_for_classification'
 import ShowImageForObjectDetection from './ComponentForDiffTypeDS/show_image_for_object_detection'
+import uuid from 'react-uuid'
 
 const ContextMenu = ({
   labels,
@@ -71,6 +72,7 @@ const ContextMenu = ({
 
           return labels.ds_type == 'object_detection' ? (
             <ShowImageForObjectDetection
+              key={uuid()}
               index={index}
               labels={labels}
               handleOnContextMenu={handleOnContextMenu}

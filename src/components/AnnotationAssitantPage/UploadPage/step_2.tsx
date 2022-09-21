@@ -148,14 +148,20 @@ const Step2 = ({
               return
             }
 
-            const labelUpload: LabelUpload = {
-              labelFile: currLabelFile,
-              linkDrive: currLinkDrive,
-              type: currType,
-              // type: currType,
+            if (
+              currLabelFile ||
+              currLinkDrive ||
+              currUiType != 'Label Format'
+            ) {
+              const labelUpload: LabelUpload = {
+                labelFile: currLabelFile,
+                linkDrive: currLinkDrive,
+                type: currType,
+                // type: currType,
+              }
+              handlePostDataClassify(labelUpload)
+              setCurrLabelUpload(labelUpload)
             }
-            handlePostDataClassify(labelUpload)
-            setCurrLabelUpload(labelUpload)
 
             router.replace('/annotation_assistant')
           }}
