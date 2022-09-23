@@ -121,6 +121,7 @@ const Step2 = ({
         <option disabled>Label Format</option>
         <option>Subs-Folder</option>
         <option>Yolo</option>
+        {/* <option>JSON</option> */}
       </select>
 
       {currType.toLowerCase() == 'subs-folder' ? (

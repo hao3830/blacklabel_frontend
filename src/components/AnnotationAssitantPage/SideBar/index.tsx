@@ -53,14 +53,6 @@ const AnnotationAssitantPageSideBar = () => {
           icon={<BiEdit size="1.25rem" />}
           text="Annotate"
         />
-        <RouteButton
-          routeName="/annotation_assistant/auto_label"
-          selectedPage={selectedPage}
-          setSelectedPage={setSelectedPage}
-          id={3}
-          icon={<GiAutoRepair size="1.25rem" />}
-          text="Auto Label"
-        />
       </div>
 
       <p className="w-full absolute bottom-2 text-center text-white overflow-hidden">

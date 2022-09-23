@@ -1,3 +1,4 @@
+import { AutoLabel } from './SelfComponent/auto_label'
 import { ClassName } from './SelfComponent/class_name'
 import { TabData } from './SelfComponent/tab_data'
 import { DataStatus } from './SelfComponent/data_status'
@@ -87,6 +88,7 @@ const AnnotationAssitantHomePage = () => {
                 Dowload Labels
               </a>
             )}
+            {tabIdx == 3 && <AutoLabel dsId={currDataId!} />}
           </div>
         </>
       ) : (

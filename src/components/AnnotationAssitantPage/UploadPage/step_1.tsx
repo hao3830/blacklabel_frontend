@@ -46,7 +46,6 @@ const Step1 = ({
       setCurrTask(data)
       const intervalId = setInterval(async () => {
         const state = await getTaskState({ task_id: data.task_id })
-        console.log(state)
         if (state == 'SUCCESS') {
           toast.update(id, {
             type: 'success',
@@ -135,11 +134,9 @@ const Step1 = ({
           }}
         >
           <option disabled>Dataset Type</option>
-          <option>Classification (Zip file olny images)</option>
-          <option>
-            Classification (Zip file are subs-folder of difference class)
-          </option>
-          <option>Object Detection (Zip file olny images)</option>
+          <option>Classification</option>
+          <option>Object Detection</option>
+          <option>Text Recognition</option>
         </select>
 
         <button

@@ -2,6 +2,7 @@ import IResponse from '../respone'
 import axios from '../axios_instance'
 import { toast } from 'react-toastify'
 import { DataDetail, Data } from '../../models/annotation_assistant/data_detail'
+import { ITaskResponeResponse } from './upload'
 
 interface IDataResponse extends IResponse {
     ds_list: Data[]
@@ -202,4 +203,36 @@ const getLabelFile = async ({ ds_id, annotation_type }: { ds_id: string, annotat
 
 }
 
-export { getData, getDataDetail, postNewClassName, getLabelFile, updateClassName, deleteClassName }
+const postAutoLabel = async ({ ds_id, conf_thresh, method }: {
+    ds_id: string, conf_thresh: string, method: string
+}) => {
+    try {
+
+        const formData = new FormData()
+        formData.append("ds_id", ds_id)
+        formData.append("conf_thresh", conf_thresh)
+        formData.append("method", method)
+
+        const response = await axios.post<ITaskResponeResponse>('/autolabel_tool/object_detection', formData)
+
+        if (response.status != 200) {
+            toast.error("Have error when get data detail, please try again")
+            return
+        }
+
+        const data = response.data
+        if (data.code != 1000) {
+            console.log(data)
+            toast.error("Can not process data return")
+            return
+        }
+
+        return data
+
+    } catch (error) {
+        console.log(error)
+        toast.error("Have error when get data info, please try again")
+    }
+}
+
+export { getData, getDataDetail, postNewClassName, getLabelFile, updateClassName, postAutoLabel, deleteClassName }

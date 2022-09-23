@@ -32,6 +32,14 @@ export function TabData({
       >
         Export Data
       </div>
+      <div
+        className={`tab tab-bordered ${tabIdx == 3 ? ' tab-active' : ''}`}
+        onClick={() => {
+          setTabIdx(3)
+        }}
+      >
+        Auto Label
+      </div>
     </div>
   )
 }

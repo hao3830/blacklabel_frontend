@@ -82,6 +82,4 @@ const updateAnnotate = async ({ ds_id, image_name, class_name, bbox }: { ds_id: 
     }
 }
 
-
-
 export { getLabels, updateAnnotate } 

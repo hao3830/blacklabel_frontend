@@ -19,24 +19,17 @@ const postImageData = async (
 
     const formData = new FormData()
     formData.append('ds_name', dataName)
-    if (imageZipFile) {
+    if (imageZipFile)
         formData.append('dataset_zip_file', imageZipFile)
-        if (dataType.toLocaleLowerCase() == "Classification (Zip file olny images)".toLocaleLowerCase())
-            formData.append("ds_type", "classification_type2")
-        else if (dataType.toLocaleLowerCase() == "Classification (Zip file are subs-folder of difference class)".toLocaleLowerCase())
-            formData.append("ds_type", "classification_type1")
-        else if (dataType.toLocaleLowerCase() == "Object Detection (Zip file olny images)".toLocaleLowerCase())
-            formData.append("ds_type", "object_detection")
-    }
-    if (imageLinkDrive) {
+    if (imageLinkDrive)
         formData.append('gdrive_link', imageLinkDrive)
-        if (dataType.toLocaleLowerCase() == "Classification (Zip file olny images)".toLocaleLowerCase())
-            formData.append("ds_type", "classification_type4")
-        else if (dataType.toLocaleLowerCase() == "Classification (Zip file are subs-folder of difference class)".toLocaleLowerCase())
-            formData.append("ds_type", "classification_type3")
-        else if (dataType.toLocaleLowerCase() == "Object Detection (Zip file olny images)".toLocaleLowerCase())
-            formData.append("ds_type", "object_detection")
-    }
+
+    if (dataType.toLocaleLowerCase() == "Classification".toLocaleLowerCase())
+        formData.append("ds_type", "image_classification")
+    else if (dataType.toLocaleLowerCase() == "Object Detection".toLocaleLowerCase())
+        formData.append("ds_type", "object_detection")
+    else if (dataType.toLocaleLowerCase() == "Text Recognition".toLocaleLowerCase())
+        formData.append("ds_type", "text_recognition")
 
 
     try {
@@ -122,4 +115,4 @@ const postLabelData = async (
 
 export { postImageData, postLabelData }
 
-export type { TaskRespone }
+export type { TaskRespone, ITaskResponeResponse }
