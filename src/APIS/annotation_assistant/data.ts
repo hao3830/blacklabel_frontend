@@ -235,4 +235,35 @@ const postAutoLabel = async ({ ds_id, conf_thresh, method }: {
     }
 }
 
-export { getData, getDataDetail, postNewClassName, getLabelFile, updateClassName, postAutoLabel, deleteClassName }
+interface IListMethodRespone extends IResponse {
+    method_list: string[]
+}
+
+const getListMethod = async ({ ds_id }: { ds_id: string }) => {
+    try {
+
+        const response = await axios.get<IListMethodRespone>("/autolabel_tool/method_list", {
+            params: { ds_id: ds_id }
+        })
+
+        if (response.status != 200) {
+            toast.error("Have error when get data detail, please try again")
+            return
+        }
+
+        const data = response.data
+        if (data.code != 1000) {
+            console.log(data)
+            toast.error("Can not process data return")
+            return
+        }
+
+        return data.method_list
+    }
+    catch (error) {
+        console.log(error)
+        toast.error("Have error when get data info, please try again")
+    }
+}
+
+export { getData, getDataDetail, postNewClassName, getLabelFile, updateClassName, postAutoLabel, deleteClassName, getListMethod }

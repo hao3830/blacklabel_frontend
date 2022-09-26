@@ -1,11 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { postAutoLabel } from 'src/APIS/annotation_assistant/data'
+import {
+  getListMethod,
+  postAutoLabel,
+} from 'src/APIS/annotation_assistant/data'
 import { getTaskState } from 'src/APIS/annotation_assistant/task'
 export function AutoLabel({ dsId }: { dsId: string }) {
   const [conf, setConf] = useState('')
   const [method, setMethod] = useState('')
-  const numbers = /^0\.[0-9]+$/
+  const [listMethod, setListMethod] = useState<string[]>([])
+
+  useEffect(() => {
+    const func = async () => {
+      const results = await getListMethod({ ds_id: dsId })
+      if (results) setListMethod(results)
+    }
+    func()
+  }, [dsId])
 
   const handleAutoLabel = async ({
     ds_id,
@@ -65,15 +76,9 @@ export function AutoLabel({ dsId }: { dsId: string }) {
               placeholder="Confidence score"
               className="input input-bordered input-primary"
               onChange={(e) => {
+                const numbers = /^0\.*[0-9]*$|^1?$/
                 e.preventDefault()
-                if (
-                  e.target.value.match(numbers) ||
-                  e.target.value == '0' ||
-                  e.target.value == '0.' ||
-                  e.target.value == '1' ||
-                  !e.target.value
-                )
-                  setConf(e.target.value)
+                if (e.target.value.match(numbers)) setConf(e.target.value)
               }}
             />
           </label>
@@ -87,7 +92,7 @@ export function AutoLabel({ dsId }: { dsId: string }) {
           }}
         >
           <option disabled>Method</option>
-          <option>Yolov7</option>
+          {listMethod && listMethod.map((e) => <option key={e}>{e}</option>)}
         </select>
       </div>
       <div
