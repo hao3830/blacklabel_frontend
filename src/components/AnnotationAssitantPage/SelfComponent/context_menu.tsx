@@ -1,11 +1,12 @@
 import { Item, ItemParams, Menu, useContextMenu } from 'react-contexify'
 import { useState } from 'react'
-import { Labels } from '../../../models/annotation_assistant/labels'
-import { updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
-import { getLabels } from '../../../APIS/annotation_assistant/annotate'
+import { Labels } from '@/models/annotation_assistant/labels'
+import { updateAnnotate } from '@/APIS/annotation_assistant/annotate'
+import { getLabels } from '@/APIS/annotation_assistant/annotate'
 import ShowImageForClassification from './ComponentForDiffTypeDS/show_image_for_classification'
 import ShowImageForObjectDetection from './ComponentForDiffTypeDS/show_image_for_object_detection'
 import uuid from 'react-uuid'
+import ShowImageForTextRecgonition from './ComponentForDiffTypeDS/show_image_for_text_recognition'
 
 const ContextMenu = ({
   labels,
@@ -78,8 +79,16 @@ const ContextMenu = ({
               handleOnContextMenu={handleOnContextMenu}
               currDataId={currDataId}
             />
-          ) : (
+          ) : labels.ds_type == 'image_classification' ? (
             <ShowImageForClassification
+              index={index}
+              labels={labels}
+              handleOnContextMenu={handleOnContextMenu}
+              currDataId={currDataId}
+              image={image}
+            />
+          ) : (
+            <ShowImageForTextRecgonition
               index={index}
               labels={labels}
               handleOnContextMenu={handleOnContextMenu}

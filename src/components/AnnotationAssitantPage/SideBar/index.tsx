@@ -1,5 +1,4 @@
 import { BiArrowFromBottom, BiData, BiEdit } from 'react-icons/bi'
-import { GiAutoRepair } from 'react-icons/gi'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import RouteButton from './route_button'

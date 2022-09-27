@@ -1,8 +1,8 @@
 import React from 'react'
 import { Item, ItemParams, Menu, useContextMenu } from 'react-contexify'
-import { DataDetail } from '../../../models/annotation_assistant/data_detail'
+import { DataDetail } from '@/models/annotation_assistant/data_detail'
 import NextPageButton from './next_page_button'
-import { deleteClassName } from '../../../APIS/annotation_assistant/data'
+import { deleteClassName } from '@/APIS/annotation_assistant/data'
 export function ClassName({
   currDataId,
   dataDetail,

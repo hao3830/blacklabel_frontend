@@ -1,11 +1,11 @@
 import { useEffect, useState, RefObject, useCallback } from 'react'
-import { Bboxes, Labels } from '../../../models/annotation_assistant/labels'
-import { API_URL } from '../../../constants/Api'
+import { Bboxes, Labels } from '@/models/annotation_assistant/labels'
+import { API_URL } from '@/constants/Api'
 import { Image as Img, Layer, Line, Stage } from 'react-konva'
 import { KonvaEventObject } from 'konva/lib/Node'
 import BBox from './bbox'
-import { listColor } from '../../../models/annotation_assistant/list_color'
-import { updateAnnotate } from '../../../APIS/annotation_assistant/annotate'
+import { listColor } from '@/models/annotation_assistant/list_color'
+import { updateAnnotate } from '@/APIS/annotation_assistant/annotate'
 
 const ImageWithBBox = ({
   setSelectedId,

@@ -1,12 +1,7 @@
-import { useState, useEffect } from 'react'
-import {
-  postImageData,
-  postLabelData,
-} from '../../../APIS/annotation_assistant/upload'
+import { useState } from 'react'
 import { TaskRespone } from '../../../APIS/annotation_assistant/upload'
 import Step1 from './step_1'
 import Step2 from './step_2'
-import { toast } from 'react-toastify'
 import {
   ImageUpload,
   LabelUpload,
@@ -25,14 +20,14 @@ const UploadPage = () => {
       currImageUpload={currImageUpload}
       setCurrTask={setCurrTask}
     />
+  ) : currStep == 2 && currTask ? (
+    <Step2
+      setCurrStep={setCurrStep}
+      currTask={currTask}
+      setCurrLabelUpload={setCurrLabelUpload}
+    />
   ) : (
-    currStep == 2 && currTask ? (
-      <Step2
-        setCurrStep={setCurrStep}
-        currTask={currTask}
-        setCurrLabelUpload={setCurrLabelUpload}
-      />
-    ): <></>
+    <></>
   )
 }
 export default UploadPage
