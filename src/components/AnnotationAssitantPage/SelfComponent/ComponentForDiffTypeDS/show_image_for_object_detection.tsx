@@ -34,17 +34,13 @@ const ShowImageForObjectDetection = ({
     }
   }, [parentRef])
   return (
-    <div
-      className="card w-5/6 h-5/6  bg-base-300 shadow-xl  relative justify-center  flex flex-col  items-center  text-white"
-      key={uuid()}
-      onContextMenu={(event) =>
-        handleOnContextMenu(event, labels.images[index])
-      }
-    >
-      <Link
-        href={`/annotation_assistant/${index}/${currDataId}`}
-        shallow={true}
+    <Link href={`/annotation_assistant/${index}/${currDataId}`} key={uuid()}>
+      <div
+        className="card w-5/6 h-5/6  bg-base-300 shadow-xl  relative justify-center  flex flex-col  items-center  text-white"
         key={uuid()}
+        onContextMenu={(event) =>
+          handleOnContextMenu(event, labels.images[index])
+        }
       >
         <figure
           className=" w-full h-full  absolute hover:cursor-pointer"
@@ -88,8 +84,8 @@ const ShowImageForObjectDetection = ({
             </Layer>
           </Stage>
         </figure>
-      </Link>
-    </div>
+      </div>
+    </Link>
   )
 }
 

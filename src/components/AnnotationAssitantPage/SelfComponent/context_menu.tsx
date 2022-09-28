@@ -91,7 +91,6 @@ const ContextMenu = ({
             <ShowImageForTextRecgonition
               index={index}
               labels={labels}
-              handleOnContextMenu={handleOnContextMenu}
               currDataId={currDataId}
               image={image}
             />

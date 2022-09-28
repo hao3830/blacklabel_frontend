@@ -76,7 +76,7 @@ export function AutoLabel({ dsId }: { dsId: string }) {
               placeholder="Confidence score"
               className="input input-bordered input-primary"
               onChange={(e) => {
-                const numbers = /^0\.*[0-9]*$|^1?$/
+                const numbers = /^0\.{0,1}((?<=\.)\d*)*$|^1?$/
                 e.preventDefault()
                 if (e.target.value.match(numbers)) setConf(e.target.value)
               }}

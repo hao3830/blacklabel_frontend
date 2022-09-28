@@ -1,16 +1,14 @@
 import { SideBarForObjectDetection } from '../SelfComponent/ComponentForDiffTypeDS/side_bar_for_object_detection'
 import { SideBarForClassification } from '../SelfComponent/ComponentForDiffTypeDS/side_bar_for_classification'
-import { Labels } from '../../../models/annotation_assistant/labels'
+import { Labels } from '@/models/annotation_assistant/labels'
 import { useState, useEffect, useRef } from 'react'
-import {
-  getLabels,
-  updateAnnotate,
-} from '../../../APIS/annotation_assistant/annotate'
-import Router, { useRouter } from 'next/router'
-import { API_URL } from '../../../constants/Api'
-import { listColor } from '../../../models/annotation_assistant/list_color'
+import { getLabels, updateAnnotate } from '@/APIS/annotation_assistant/annotate'
+import { useRouter } from 'next/router'
+import { API_URL } from '@/constants/Api'
+import { listColor } from '@/models/annotation_assistant/list_color'
 import ImageWithBBox from '../SelfComponent/image_with_bbox'
 import Konva from 'konva'
+import SideBarForTextRecognition from '../SelfComponent/ComponentForDiffTypeDS/side_bar_for_text_recognition'
 
 const AnnotateDetailPage = ({
   index,
@@ -175,11 +173,17 @@ const AnnotateDetailPage = ({
             currClassIdx={currClassIdx}
             setCurrClassIdx={setCurrClassIdx}
           />
-        ) : (
+        ) : labels && labels.ds_type == 'image_classification' ? (
           <SideBarForClassification
             labels={labels}
             currIdx={currIdx}
             handleupdateAnnotate={handleupdateAnnotate}
+            ds_id={ds_id}
+          />
+        ) : (
+          <SideBarForTextRecognition
+            labels={labels}
+            currIdx={currIdx}
             ds_id={ds_id}
           />
         )}

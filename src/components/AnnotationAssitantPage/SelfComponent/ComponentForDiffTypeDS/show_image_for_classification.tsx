@@ -19,16 +19,13 @@ const ShowImageForClassification = ({
   if (index < labels.labels.length) label = labels.labels[index]
 
   return (
-    <div
-      className="card w-5/6 h-5/6 bg-base-300 shadow-xl  relative flex flex-col items-center justify-center text-white"
-      key={index}
-      onContextMenu={(event) =>
-        handleOnContextMenu(event, labels.images[index])
-      }
-    >
-      <Link
-        href={`/annotation_assistant/${index}/${currDataId}`}
-        shallow={true}
+    <Link href={`/annotation_assistant/${index}/${currDataId}`}>
+      <div
+        className="card w-5/6 h-5/6 bg-base-300 shadow-xl  relative flex flex-col items-center justify-center text-white"
+        key={index}
+        onContextMenu={(event) =>
+          handleOnContextMenu(event, labels.images[index])
+        }
       >
         <figure className=" w-20 h-16 place-self-center mt-10 relative hover:cursor-pointer">
           <img
@@ -36,11 +33,11 @@ const ShowImageForClassification = ({
             alt={image}
           />
         </figure>
-      </Link>
-      <div className="card-body items-center text-center ">
-        <h2 className="card-title absolute">{label ? label : 'None'}</h2>
+        <div className="card-body items-center text-center ">
+          <h2 className="card-title absolute">{label ? label : 'None'}</h2>
+        </div>
       </div>
-    </div>
+    </Link>
   )
 }
 

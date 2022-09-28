@@ -81,6 +81,7 @@ const BBox = ({
         fill={listColor[colorIdx].color}
         name={idx.toString()}
         opacity={currClassIdx == colorIdx ? 0.8 : 0.3}
+        stroke="black"
         ref={shapeRef}
         onClick={() => {
           if (typeEditor == 2) {
