@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Labels } from '../../../../models/annotation_assistant/labels'
-import type { listColor } from '../../../../models/annotation_assistant/list_color'
+import { Labels } from '@/models/annotation_assistant/labels'
+import type { listColor } from '@/models/annotation_assistant/list_color'
 import SideNextButton from './side_next_button'
 import { FaHandPaper, FaPen, FaEraser, FaPaintRoller } from 'react-icons/fa'
 export function SideBarForObjectDetection({

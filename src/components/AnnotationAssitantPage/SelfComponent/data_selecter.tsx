@@ -1,5 +1,5 @@
 import React from 'react'
-import { Data } from '../../../models/annotation_assistant/data_detail'
+import { Data } from '@/models/annotation_assistant/data_detail'
 export function DataSelecter({
   currDataName,
   data,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Labels } from '../../../../models/annotation_assistant/labels'
+import { Labels } from '@/models/annotation_assistant/labels'
 import SideNextButton from './side_next_button'
 import { useState } from 'react'
 export function SideBarForClassification({

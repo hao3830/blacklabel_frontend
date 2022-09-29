@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { API_URL } from '../../../../constants/Api'
-import { Labels } from '../../../../models/annotation_assistant/labels'
+import { API_URL } from '@/constants/Api'
+import { Labels } from '@/models/annotation_assistant/labels'
 import { Image as Img, Layer, Stage } from 'react-konva'
 import { useEffect, useRef, useState } from 'react'
 import { Rect } from 'react-konva'

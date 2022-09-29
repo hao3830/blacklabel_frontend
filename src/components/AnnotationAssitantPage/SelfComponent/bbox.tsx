@@ -2,8 +2,8 @@ import { Rect as R } from 'konva/lib/shapes/Rect'
 import { Transformer as T } from 'konva/lib/shapes/Transformer'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Rect, Transformer } from 'react-konva'
-import { Bboxes, Labels } from '../../../models/annotation_assistant/labels'
-import { listColor } from '../../../models/annotation_assistant/list_color'
+import { Bboxes, Labels } from '@/models/annotation_assistant/labels'
+import { listColor } from '@/models/annotation_assistant/list_color'
 
 const BBox = ({
   Labels,

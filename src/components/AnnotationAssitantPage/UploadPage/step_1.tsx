@@ -3,9 +3,9 @@ import { toast } from 'react-toastify'
 import {
   postImageData,
   TaskRespone,
-} from '../../../APIS/annotation_assistant/upload'
+} from '@/APIS/annotation_assistant/upload'
 import { ImageUpload } from '.'
-import { getTaskState } from '../../../APIS/annotation_assistant/task'
+import { getTaskState } from '@/APIS/annotation_assistant/task'
 
 const Step1 = ({
   currImageUpload,

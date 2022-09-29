@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { LabelUpload } from '.'
-import { getTaskState } from '../../../APIS/annotation_assistant/task'
+import { getTaskState } from '@/APIS/annotation_assistant/task'
 import {
   postLabelData,
   TaskRespone,
-} from '../../../APIS/annotation_assistant/upload'
-import LabelInfoTitle from '../../../constants/LabelInfo'
+} from '@/APIS/annotation_assistant/upload'
+import LabelInfoTitle from '@/constants/LabelInfo'
 import { useRouter } from 'next/router'
 
 const Step2 = ({

@@ -1,16 +1,11 @@
-import { useState, useEffect } from 'react'
-import {
-  postImageData,
-  postLabelData,
-} from '../../../APIS/annotation_assistant/upload'
-import { TaskRespone } from '../../../APIS/annotation_assistant/upload'
+import { useState } from 'react'
+import { TaskRespone } from '@/APIS/annotation_assistant/upload'
 import Step1 from './step_1'
 import Step2 from './step_2'
-import { toast } from 'react-toastify'
 import {
   ImageUpload,
   LabelUpload,
-} from '../../../models/annotation_assistant/upload'
+} from '@/models/annotation_assistant/upload'
 
 const UploadPage = () => {
   const [currStep, setCurrStep] = useState<number>(1)

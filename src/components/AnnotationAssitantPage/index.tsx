@@ -8,10 +8,10 @@ import {
   getData,
   getDataDetail,
   postNewClassName,
-} from '../../APIS/annotation_assistant/data'
-import { DataDetail, Data } from '../../models/annotation_assistant/data_detail'
+} from '@/APIS/annotation_assistant/data'
+import { DataDetail, Data } from '@/models/annotation_assistant/data_detail'
 import { toast } from 'react-toastify'
-import { API_URL } from '../../constants/Api'
+import { API_URL } from '@/constants/Api'
 
 const AnnotationAssitantHomePage = () => {
   const [data, setData] = useState<Data[] | void>()

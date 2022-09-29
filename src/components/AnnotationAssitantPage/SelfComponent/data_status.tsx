@@ -1,5 +1,5 @@
 import React from 'react'
-import { DataDetail } from '../../../models/annotation_assistant/data_detail'
+import { DataDetail } from '@/models/annotation_assistant/data_detail'
 
 export function DataStatus({ dataDetail }: { dataDetail: DataDetail }) {
   return (

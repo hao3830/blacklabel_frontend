@@ -1,4 +1,4 @@
-import header from '../../../../public/static/header_s.png'
+import header from '@/public/static/header_s.png'
 
 const AnnotationAssitantPageHeader = () => {
   return (
