@@ -20,6 +20,7 @@
       "@/components/*": ["src/components/*"],
       "@/APIs/*": ["src/APIs/*"],
       "@/models/*": ["src/models/*"],
+      "@/public/*": ["public/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
